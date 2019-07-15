@@ -12,7 +12,7 @@ class Interface():
 
 
     def createMaze(self):
-        shape = (5, 5)
+        shape = (10, 10)
         fillPercentage = 0.2
         self.field = Field.createMaze(shape, fillPercentage)
 

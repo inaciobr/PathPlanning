@@ -9,6 +9,8 @@ class Controller:
     
     def createMaze(self, shape, fillPercentage):
         self.field = Field.createMaze(shape, fillPercentage)
+        self.addDrone('A', (2, 2))
+        print((self.vehicles['A']))
 
     
     def addDrone(self, label, position):

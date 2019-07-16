@@ -1,8 +1,8 @@
-from ..field import Field
+from ..controller import Controller
 
-class Interface():
+class Interface:
     def __init__(self):
-        self.field = None
+        self.controller = Controller()
 
 
     def show(self):
@@ -14,18 +14,17 @@ class Interface():
     def createMaze(self):
         shape = (10, 10)
         fillPercentage = 0.2
-        self.field = Field.createMaze(shape, fillPercentage)
+        self.controller.createMaze(shape, fillPercentage)
 
 
     def loadMaze(self):
-        file = 'file'
-        self.field = Field.loadField(file)
+        pass
 
 
     def printMaze(self):
-        print(self.field)
+        print(self.controller.field)
 
-
+ 
     @classmethod
     def create(cls):
         interface = cls()

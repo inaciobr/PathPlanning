@@ -52,22 +52,19 @@ class Field:
 
     # Verifica se é possível traçar um caminho conectando dois pontos
     def isReachable(self, pos1, pos2):
-        return self.region[pos1] == self.region[pos2] != np.inf
+        return self.region[pos1] == self.region[pos2] and self._field[pos1] != np.inf
 
 
     # Retorna as posições vizinhas de um nó
     def getNeighbors(self, position, actions, pathCost = 0):
-        for act in actions:        
-            try:
-                neighborPosition = (position[0] + act['direction'][0], position[1] + act['direction'][1])
-                if self.mask[neighborPosition]:
-                    yield {
-                        'position': neighborPosition,
-                        'pathCost': act['cost'] + pathCost,
-                        'action': act['action']
-                    }
-            except:
-                continue
+        for action in actions:
+            edgePos = (position[0] + action['direction'][0], position[1] + action['direction'][1])
+
+            if 0 <= edgePos[0] < self._field.shape[0] and 0 <= edgePos[1] < self._field.shape[1] and self.mask[edgePos]:
+                yield {'position': edgePos,
+                       'pathCost': action['cost'] + pathCost,
+                       'action': action['action']}
+
 
     """ 
     Atributos
@@ -85,7 +82,7 @@ class Field:
         self.mask = self._field != np.inf
         self.validPositions = Preprocess.validPositions(self.mask)
         self.validPositionsAmount = self.validPositions[0].size
-        self.region = Preprocess.connectedComponent(self._field)
+        self.region = Preprocess.connectedComponent(self.mask)
 
 
     # Exibe o campo

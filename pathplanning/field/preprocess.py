@@ -15,6 +15,6 @@ class Preprocess:
 
     # Separa o campo em regiões para verificar acessibilidade.
     @staticmethod
-    def connectedComponent(field):
+    def connectedComponent(mask):
         from scipy.ndimage.measurements import label
-        return label(field)[0]
+        return label(mask)[0]

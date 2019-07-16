@@ -8,12 +8,13 @@ class Interface:
     def show(self):
         print("===== Path Planning =====")
         self.createMaze()
-        self.printMaze()
+        
+        #self.printMaze()
 
 
     def createMaze(self):
         shape = (10, 10)
-        fillPercentage = 0.2
+        fillPercentage = 0.0
         self.controller.createMaze(shape, fillPercentage)
 
 

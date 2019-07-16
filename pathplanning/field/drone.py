@@ -9,7 +9,7 @@ class Drone:
         { 'action': 'v', 'cost': 1, 'direction': (+1,  0), 'hash': 0x02 },
         { 'action': '<', 'cost': 1, 'direction': ( 0, -1), 'hash': 0x04 },
         { 'action': '>', 'cost': 1, 'direction': ( 0, +1), 'hash': 0x08 },
-        #{'action': 'o', 'cost': 1, 'direction': ( 0,  0), 'hash': 0x10 },
+        #{ 'action': 'o', 'cost': 1, 'direction': ( 0,  0), 'hash': 0x10 },
     ]
 
     def __init__(self, label, position):

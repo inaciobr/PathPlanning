@@ -58,12 +58,16 @@ class Field:
     # Retorna as posições vizinhas de um nó
     def getNeighbors(self, position, actions, pathCost = 0):
         for action in actions:
-            edgePos = (position[0] + action['direction'][0], position[1] + action['direction'][1])
-
-            if 0 <= edgePos[0] < self._field.shape[0] and 0 <= edgePos[1] < self._field.shape[1] and self.mask[edgePos]:
-                yield {'position': edgePos,
-                       'pathCost': action['cost'] + pathCost,
-                       'action': action['action']}
+            try:
+                neighborPosition = (position[0] + action['direction'][0], position[1] + action['direction'][1])
+                if self.mask[neighborPosition] and 0 <= neighborPosition[0] and 0 <= neighborPosition[1]:
+                    yield {
+                        'position': neighborPosition,
+                        'pathCost': action['cost'] + pathCost,
+                        'action': action['action']
+                    }
+            except:
+                pass
 
 
     """ 

@@ -45,26 +45,6 @@ class Graph2D:
                 yield eNode
 
 
-    def newEdges2(self, node):
-        for act in self.actions:
-            n = self.maze.getNeighbor(node['position'], act['direction'])
-            if n is None:
-                continue
-
-            eNode = self.node.get(n)
-
-            if eNode is None:
-                yield self.addNode(n, node, act['cost'] + node['pathCost'], act['action'])
-
-            elif eNode['state'] != 'V' and act['cost'] < eNode['pathCost']:
-                eNode['pathCost'] = act['cost'] + node['pathCost']
-                eNode['action'] = act['action']
-                eNode['parent'] = node
-                yield eNode
-
-
-
-
     # Monta o caminho encontrado.
     def makePath(self, node):
         solution = [ ]

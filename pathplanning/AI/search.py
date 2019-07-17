@@ -1,6 +1,6 @@
 import numpy as np
-import math
 import heapq
+import math
 
 from .graph2D import Graph2D
 
@@ -11,22 +11,21 @@ Métodos de busca individuais com heurísticas, baseados na minimização de uma
 def leastCost(graph):
     # Nó inicial.
     frontier = [ (0, 0, graph.startNode) ]
-
     i = 0
-    while len(frontier):
-        # Extrai o nó com menor custo.
-        node = heapq.heappop(frontier)[-1]
+    while True:
+        try:
+            # Extrai o nó com menor custo.
+            node = heapq.heappop(frontier)[-1]
+        except:
+            break
 
-        # A primeira vez que visitou um nó é quando encontra o menor caminho até ele.
-        if node['state'] == 'V':
+        # A primeira vez que visita um nó é quando encontra o menor caminho até ele.
+        if node['visited']:
             continue
 
         # Encontrou o menor caminho.
-        if node['state'] == 'G':
+        if node['isGoal']:
             return graph.makePath(node)
-
-        # Altera o estado do nó para visitado.
-        node['state'] = 'V'
 
         # Adiciona novos nós para serem explorados.
         for edge in graph.newEdges(node):
@@ -42,5 +41,4 @@ def manhattanDistance(position1, position2):
 
 def AStar(start, goal, obj, maze):
     cost = lambda node: node['pathCost'] + manhattanDistance(goal, node['position'])
-    return leastCost(Graph2D(start, goal, obj, maze, cost))
-
+    return leastCost(Graph2D(start, goal, obj.actions, maze, cost))

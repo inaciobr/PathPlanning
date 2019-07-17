@@ -1,5 +1,5 @@
 from ..field import Field, Drone
-from ..AI import *
+from ..AI import Search
 
 import cProfile
 
@@ -11,11 +11,11 @@ class Controller:
 
     
     def createMaze(self, shape, fillPercentage):
-        self.field = Field.createMaze((5, 5), 0.0)
-        self.addDrone('A', (0, 0)).setGoalPosition((4, 4))
-        print(AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.vehicles['A'], self.field))
+        #self.field = Field.createMaze((5, 5), 0.0)
+        #self.addDrone('A', (0, 0)).setGoalPosition((4, 4))
+        #print(AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.vehicles['A'], self.field))
 
-        """#self.field = Field.createMaze((1000, 1000), 0.2)
+        #self.field = Field.createMaze((1000, 1000), 0.2)
         self.field = Field.load('tAcess.npy')
         self.addDrone('A', (0, 0)).setGoalPosition((999, 999))
         #print(self.field.field[:10, :10])
@@ -23,7 +23,7 @@ class Controller:
         #print(self.field.isReachable((0, 0), (999, 999)))
         
         cProfile.runctx("AStar(start, goal, obj, maze)", {
-            'AStar': AStar
+            'AStar': Search.AStar
         }, {
             'start': self.vehicles['A'].position,
             'goal': self.vehicles['A'].goalPosition,

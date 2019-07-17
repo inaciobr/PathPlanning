@@ -17,7 +17,7 @@ class Interface:
         fillPercentage = 0.0
         self.controller.createMaze(shape, fillPercentage)
 
-
+ 
     def loadMaze(self):
         pass
 

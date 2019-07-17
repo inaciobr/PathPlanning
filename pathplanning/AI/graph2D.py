@@ -53,7 +53,7 @@ class Graph2D:
             if edgePosition in self.node:
                 edgeNode = self.node[edgePosition]
 
-                if not edgeNode['visited'] and node['pathCost'] + action['cost'] <= edgeNode['pathCost']:
+                if not edgeNode['visited'] and node['pathCost'] + action['cost'] < edgeNode['pathCost']:
                     yield self.updateNode(edgeNode, node, node['pathCost'] + action['cost'], action['action'])
             else:
                 yield self.addNode(edgePosition, node, node['pathCost'] + action['cost'], action['action'])
@@ -73,3 +73,23 @@ class Graph2D:
 
         solution.reverse()
         return solution
+
+
+    def __str__(self):
+        # Identificação das colunas
+        mapa = '     ' + ' '.join("{:03}".format(i) for i in range(self.field.shape[1])) + '\n'
+
+        for i, line in enumerate(self.field.field):
+
+            mapa += "{:03} ".format(i)
+            for j, pos in enumerate(line):
+                try:
+                    mapa += "| " + ('G' if self.node[(i, j)]['isGoal'] else 'V' if self.node[(i, j)]['visited'] else 'U') + " "
+                except:
+                    mapa += "|   "
+
+            mapa += '\n'
+
+
+        
+        return mapa

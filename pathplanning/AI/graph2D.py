@@ -4,12 +4,11 @@ import numpy as np
 Implementação de do grafo 2D utilizado nos algoritmos de busca.
 """
 class Graph2D:
-    def __init__(self, start, goal, actions, field, cost = None, initialCost = 0):
+    def __init__(self, start, goal, actions, field, initialCost = 0):
         self.node = {}
 
         self.actions = actions
         self.field = field
-        self.cost = cost
 
         self.startNode = self.addNode(start, None, initialCost, 'S')
         self.goalNode = self.addNode(goal, None, np.inf, 'G', goal = True)
@@ -29,6 +28,7 @@ class Graph2D:
         return self.node[position]
 
 
+    # Atualiza as informações de um nó.
     def updateNode(self, node, parent, pathCost, action):
         node['parent'] = parent
         node['pathCost'] = pathCost
@@ -63,10 +63,7 @@ class Graph2D:
     def makePath(self, node):
         solution = [ ]
 
-        if node is None:
-            return solution
-
-        while node['parent'] is not None:
+        while node is not None:
             solution.append({
                 'position': node['position'],
                 'pathCost': node['pathCost'],

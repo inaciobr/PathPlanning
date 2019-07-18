@@ -15,14 +15,14 @@ class Search:
     # Busca em largura.
     # Todos as expansões são consideradas com custo 1.
     @staticmethod
-    def breadthFirst(start, goal, obj, maze):
-        graph = Graph2D(start, goal, obj.actions, maze)
+    def breadthFirst(start, goal, actions, field):
+        graph = Graph2D(start, goal, actions, field)
         frontier = [ graph.startNode ]
 
         try:
             while True:
                 node = frontier.pop(0)
-                for edge in graph.newEdges(node):             
+                for edge in graph.newEdges(node):
                     if edge['isGoal']:
                         return graph.makePath(edge)
 
@@ -30,7 +30,6 @@ class Search:
 
         except:
             return graph.makePath(None)
-            
 
 
     """
@@ -39,38 +38,39 @@ class Search:
     # Busca uniforme
     # Não utiliza heurística.
     @staticmethod
-    def uniformCost(start, goal, obj, maze):
+    def uniformCost(start, goal, actions, field):
         cost = lambda node: node['pathCost']
-        return Search.leastCost(Graph2D(start, goal, obj.actions, maze), cost)
+        return Search.leastCost(Graph2D(start, goal, actions, field), cost)
         
 
     # Busca A* (A Star).
     # Utiliza a distância de manhattan como heurística.
     # OBS: Baseada em 4 movimentos possíveis.
     @staticmethod
-    def AStar(start, goal, obj, maze):
+    def AStar(start, goal, actions, field):
         cost = lambda node: node['pathCost'] + Search.manhattanDistance(goal, node['position'])
-        return Search.leastCost(Graph2D(start, goal, obj.actions, maze), cost)
+        return Search.leastCost(Graph2D(start, goal, actions, field), cost)
 
 
     # Busca greedy
     # Utiliza a distância de manhattan como heurística.
     # OBS: Baseada em 4 movimentos possíveis.
     @staticmethod
-    def greedy(start, goal, obj, maze):
+    def greedy(start, goal, actions, field):
         cost = lambda node: Search.manhattanDistance(goal, node['position'])
-        return Search.leastCost(Graph2D(start, goal, obj.actions, maze), cost)
+        return Search.leastCost(Graph2D(start, goal, actions, field), cost)
 
 
     # Busca A* "Direta"
     # Utiliza o produto vetorial como parte da heurística para favorecer
     # caminhos próximos à linha reta que conecta o início ao fim.
     @staticmethod
-    def AStarDirect(start, goal, obj, maze):
+    def AStarDirect(start, goal, actions, field):
         vector = (start[0] - goal[0], start[1] - goal[1])
         cost = lambda node: node['pathCost'] + Search.manhattanDistance(goal, node['position']) \
                             + 0.0001*Search.crossDistance((node['position'][0] - goal[0], node['position'][1] - goal[1]), vector)
-        return Search.leastCost(Graph2D(start, goal, obj.actions, maze), cost)
+
+        return Search.leastCost(Graph2D(start, goal, actions, field), cost)
 
 
     # Função de busca que minimiza uma função custo genérica.
@@ -83,7 +83,7 @@ class Search:
         try:
             while True:
                 # Extrai o nó com menor custo.
-                node = heapq.heappop(frontier)[-1]
+                _, _, node = heapq.heappop(frontier)
 
                 # A primeira vez que visita um nó é quando encontra o menor caminho até ele.
                 if node['visited']:
@@ -134,3 +134,69 @@ class Search:
     @staticmethod
     def crossDistance(vector1, vector2):
         return abs(vector1[0]*vector2[1] - vector2[0]*vector1[1])
+
+
+
+    """
+    Outros algoritmos
+    """
+    # Algoritmo que visa puramente seguir uma linha reta.
+    # Se não for possível seguir o caminho direto, ele retorna o caminho até o obstáculo
+    # que interceptou o movimento.
+    @staticmethod
+    def straightLine(start, goal, actions, field):
+        vector = (start[0] - goal[0], start[1] - goal[1])
+        cost = lambda node: Search.crossDistance((node[0] - goal[0], node[1] - goal[1]), vector)
+
+        node = start
+        pathCost = 0
+
+        # Utiliza apenas as ações que apontam na direção do objetivo.
+        gActions = [ act for act in actions if vector[0]*act['direction'][0] <= 0 and vector[1]*act['direction'][1] <= 0 ]
+
+        path = [{
+            'position': node,
+            'pathCost': pathCost,
+            'action': 'S'
+        }]
+
+        while node != goal:
+            edgePos = [ (node[0] + act['direction'][0], node[1] + act['direction'][1]) for act in gActions ]
+            _, node, act = min(zip(map(cost, edgePos), edgePos, gActions))
+
+            if not field.mask[node]:
+                break
+
+            pathCost += act['cost']
+
+            path.append({
+                'position': node,
+                'pathCost': pathCost,
+                'action': act['action']
+            })
+
+        return path
+
+
+    # Verifica se existe a linha reta que liga dois pontos.
+    # Se a linha não existir, retorna a posição do obstáculo.
+    @staticmethod
+    def checkStraightLine(start, goal, field):
+        vecX, vecY = (start[0] - goal[0], start[1] - goal[1])
+        dirX, dirY = (1 if vecX > 0 else -1, 1 if vecY > 0 else -1)
+        
+        stepX, stepY = (dirX * vecX, dirY * vecY)
+        cross = stepY * (stepX + 0.5) + stepX * (stepY + 0.5)
+
+        px, py = start
+        i, j = 0.5*stepY, 0.5*stepX
+
+        while i + j < cross and field.mask[px, py]:
+            if i < j:
+                px += dirX
+                i += stepX
+            else:
+                py += dirY
+                j += stepY
+
+        return field.mask[px, py]

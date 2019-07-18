@@ -40,9 +40,10 @@ class Graph2D:
     # Retorna as arestas ainda não visitadas de um nó.
     def newEdges(self, node):
         node['visited'] = True
+        posX, posY = node['position']
         
         for action in self.actions:
-            edgePosition = (node['position'][0] + action['direction'][0], node['position'][1] + action['direction'][1])
+            edgePosition = (posX + action['direction'][0], posY + action['direction'][1])
 
             try:
                 if not self.field.mask[edgePosition] or edgePosition[0] < 0 or edgePosition[1] < 0:

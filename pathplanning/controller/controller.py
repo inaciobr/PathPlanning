@@ -2,6 +2,7 @@ from ..field import Field, Drone
 from ..AI import Search
 
 import cProfile
+import time
 
 
 class Controller:
@@ -11,9 +12,14 @@ class Controller:
 
     
     def createMaze(self, shape, fillPercentage):
-        #self.field = Field.createMaze((5, 5), 0.0)
-        #self.addDrone('A', (0, 0)).setGoalPosition((4, 4))
-        #print(AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.vehicles['A'], self.field))
+        """self.field = Field.createMaze((1000, 1000), 0.0)
+        self.addDrone('A', (0, 0)).setGoalPosition((500, 500))
+        #print(Search.straightLine(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.vehicles['A'].actions, self.field))
+        #self.field = Field.load('tAcess.npy')
+        t = time.time()
+        for _ in range(1000):
+            Search.checkStraightLine(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field)
+        print(time.time() - t)"""
 
         #self.field = Field.createMaze((1000, 1000), 0.2)
         self.field = Field.load('tAcess.npy')
@@ -22,13 +28,13 @@ class Controller:
         #print(self.field.region[:10, :10])
         #print(self.field.isReachable((0, 0), (999, 999)))
         
-        cProfile.runctx("AStar(start, goal, obj, maze)", {
+        cProfile.runctx("AStar(start, goal, actions, field)", {
             'AStar': Search.AStar
         }, {
             'start': self.vehicles['A'].position,
             'goal': self.vehicles['A'].goalPosition,
-            'obj': self.vehicles['A'],
-            'maze': self.field
+            'actions': self.vehicles['A'].actions,
+            'field': self.field
         })
 
         

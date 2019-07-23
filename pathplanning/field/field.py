@@ -12,7 +12,7 @@ Especificações do field:
 * '0.0'     => Free space
 * 'np.inf'  => Obstacle
 """
-class Field:
+class Field():
     """
     Inicialização do campo
     """
@@ -55,27 +55,13 @@ class Field:
         return self.region[pos1] == self.region[pos2] and self._field[pos1] != np.inf
 
 
-    # Retorna as posições vizinhas de um nó
-    def getNeighbors(self, position, actions, pathCost = 0):
-        for action in actions:
-            try:
-                neighborPosition = (position[0] + action['direction'][0], position[1] + action['direction'][1])
-                if self.mask[neighborPosition] and 0 <= neighborPosition[0] and 0 <= neighborPosition[1]:
-                    yield {
-                        'position': neighborPosition,
-                        'pathCost': action['cost'] + pathCost,
-                        'action': action['action']
-                    }
-            except:
-                pass
-
-
     """ 
     Atributos
     """
     @property
     def field(self):
         return self._field
+
 
     @field.setter
     def field(self, value):

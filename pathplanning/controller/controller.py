@@ -12,23 +12,24 @@ class Controller:
 
     
     def createMaze(self, shape, fillPercentage):
-        """self.field = Field.createMaze((1000, 1000), 0.0)
-        self.addDrone('A', (0, 0)).setGoalPosition((500, 500))
         #print(Search.straightLine(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.vehicles['A'].actions, self.field))
-        #self.field = Field.load('tAcess.npy')
-        t = time.time()
-        for _ in range(1000):
-            Search.checkStraightLine(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field)
-        print(time.time() - t)"""
-
-        #self.field = Field.createMaze((1000, 1000), 0.2)
         self.field = Field.load('tAcess.npy')
         self.addDrone('A', (0, 0)).setGoalPosition((999, 999))
+        t = time.time()
+        import random
+        for _ in range(100000):
+            Search.checkStraightLine(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field.mask)
+        print(time.time() - t)
+
+        #self.field = Field.createMaze((1000, 1000), 0.2)
+        #self.field = Field.load('tAcess.npy')
+        #self.addDrone('A', (0, 0)).setGoalPosition((999, 999))
+        #print(Search.AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.vehicles['A'].actions, self.field))
         #print(self.field.field[:10, :10])
         #print(self.field.region[:10, :10])
         #print(self.field.isReachable((0, 0), (999, 999)))
         
-        cProfile.runctx("AStar(start, goal, actions, field)", {
+        """cProfile.runctx("AStar(start, goal, actions, field)", {
             'AStar': Search.AStar
         }, {
             'start': self.vehicles['A'].position,

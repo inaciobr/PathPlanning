@@ -4,14 +4,6 @@ __all__ = ['Drone']
 Veículo do tipo Drone.
 """
 class Drone:
-    actions = [
-        { 'action': '^', 'cost': 1, 'direction': (-1,  0), 'hash': 0x01 },
-        { 'action': 'v', 'cost': 1, 'direction': (+1,  0), 'hash': 0x02 },
-        { 'action': '<', 'cost': 1, 'direction': ( 0, -1), 'hash': 0x04 },
-        { 'action': '>', 'cost': 1, 'direction': ( 0, +1), 'hash': 0x08 },
-        #{ 'action': 'o', 'cost': 1, 'direction': ( 0,  0), 'hash': 0x10 },
-    ]
-
     def __init__(self, label, position):
         self.label = label
         self.position = position
@@ -29,7 +21,7 @@ class Drone:
         self.isFlying = False
 
 
-    def setGoalPosition(self, pos):
+    def setGoal(self, pos):
         self.goalPosition = pos
 
 

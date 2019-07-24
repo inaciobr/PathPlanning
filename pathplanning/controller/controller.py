@@ -22,6 +22,7 @@ class Controller:
     def createMaze(self, shape, fillPercentage):
         #print(Search.straightLine(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.actions, self.field))
         self.field = Field.load('tAcess.npy')
+        #self.field = Field.createMaze((200, 200), 0.0)
         self.addDrone('A', (0, 0)).setGoal((999, 999))
         t = time.time()
         Search.AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field, self.actions)

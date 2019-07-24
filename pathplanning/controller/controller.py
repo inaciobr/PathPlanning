@@ -24,7 +24,7 @@ class Controller:
         self.field = Field.load('tAcess.npy')
         self.addDrone('A', (0, 0)).setGoal((999, 999))
         t = time.time()
-        #Search.AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.actions, self.field)
+        Search.AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field, self.actions)
         print(time.time() - t)
 
         #self.field = Field.createMaze((1000, 1000), 0.2)
@@ -35,13 +35,13 @@ class Controller:
         #print(self.field.region[:10, :10])
         #print(self.field.isReachable((0, 0), (999, 999)))
         
-        cProfile.runctx("AStar(start, goal, actions, field)", {
+        """cProfile.runctx("AStar(start, goal, field, actions)", {
             'AStar': Search.AStar
         }, {
             'start': self.vehicles['A'].position,
             'goal': self.vehicles['A'].goalPosition,
-            'actions': self.actions,
-            'field': self.field
+            'field': self.field,
+            'actions': self.actions
         })
 
         

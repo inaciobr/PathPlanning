@@ -4,37 +4,26 @@ import numpy as np
 Implementação de do grafo 2D utilizado nos algoritmos de busca.
 """
 class Graph2D:
-    def __init__(self, start, goal, actions, field, initialCost = 0):
+    def __init__(self, start, field, actions, initialCost = 0):
         self.node = {}
 
         self.actions = actions
         self.field = field
 
         self.startNode = self.addNode(start, None, initialCost, 'S')
-        self.goalNode = self.addNode(goal, None, np.inf, 'G', goal = True)
 
 
     # Adiciona um novo nó ao grafo.
-    def addNode(self, position, parent, pathCost, action, goal = False):
+    def addNode(self, position, parent, pathCost, action):
         self.node[position] = {
             'visited': False,
             'position': position,
             'pathCost': pathCost,
             'action': action,
             'parent': parent,
-            'isGoal': goal,
         }
 
         return self.node[position]
-
-
-    # Atualiza as informações de um nó.
-    def updateNode(self, node, parent, pathCost, action):
-        node['parent'] = parent
-        node['pathCost'] = pathCost
-        node['action'] = action
-
-        return node
 
 
     # Retorna as arestas ainda não visitadas de um nó.
@@ -55,7 +44,10 @@ class Graph2D:
                 edgeNode = self.node[edgePosition]
 
                 if not edgeNode['visited'] and node['pathCost'] + action['cost'] < edgeNode['pathCost']:
-                    yield self.updateNode(edgeNode, node, node['pathCost'] + action['cost'], action['action'])
+                    edgeNode['parent'] = node
+                    edgeNode['pathCost'] = node['pathCost'] + action['cost']
+                    edgeNode['action'] = action['action']
+                    yield edgeNode
             else:
                 yield self.addNode(edgePosition, node, node['pathCost'] + action['cost'], action['action'])
 
@@ -85,7 +77,7 @@ class Graph2D:
             mapa += "{:03} ".format(i)
             for j, pos in enumerate(line):
                 try:
-                    mapa += "| " + ('G' if self.node[(i, j)]['isGoal'] else 'V' if self.node[(i, j)]['visited'] else 'U') + " "
+                    mapa += "| " + ('V' if self.node[(i, j)]['visited'] else 'U') + " "
                 except:
                     mapa += "|   "
 

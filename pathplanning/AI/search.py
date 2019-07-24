@@ -17,8 +17,8 @@ class Search:
     # Busca em largura.
     # Todos as expansões são consideradas com custo 1.
     @staticmethod
-    def breadthFirst(start, goal, actions, field):
-        graph = Graph2D(start, goal, actions, field)
+    def breadthFirst(start, goal, field, actions):
+        graph = Graph2D(start, goal, field, actions)
         frontier = [ graph.startNode ]
 
         try:
@@ -30,7 +30,7 @@ class Search:
 
                     frontier.append(edge)
 
-        except:
+        except IndexError:
             return graph.makePath(None)
 
 
@@ -40,44 +40,44 @@ class Search:
     # Busca uniforme
     # Não utiliza heurística.
     @staticmethod
-    def uniformCost(start, goal, actions, field):
+    def uniformCost(start, goal, field, actions):
         cost = lambda node: node['pathCost']
-        return Search.leastCost(Graph2D(start, goal, actions, field), cost)
+        return Search.leastCost(start, goal, Graph2D(start, field, actions), cost)
         
 
     # Busca A* (A Star).
     # Utiliza a distância de manhattan como heurística.
     # OBS: Baseada em 4 movimentos possíveis.
     @staticmethod
-    def AStar(start, goal, actions, field):
+    def AStar(start, goal, field, actions):
         cost = lambda node: node['pathCost'] + Search.manhattanDistance(goal, node['position'])
-        return Search.leastCost(Graph2D(start, goal, actions, field), cost)
+        return Search.leastCost(start, goal, Graph2D(start, field, actions), cost)
 
 
     # Busca greedy
     # Utiliza a distância de manhattan como heurística.
     # OBS: Baseada em 4 movimentos possíveis.
     @staticmethod
-    def greedy(start, goal, actions, field):
+    def greedy(start, goal, field, actions):
         cost = lambda node: Search.manhattanDistance(goal, node['position'])
-        return Search.leastCost(Graph2D(start, goal, actions, field), cost)
+        return Search.leastCost(start, goal, Graph2D(start, field, actions), cost)
 
 
     # Busca A* "Direta"
     # Utiliza o produto vetorial como parte da heurística para favorecer
     # caminhos próximos à linha reta que conecta o início ao fim.
     @staticmethod
-    def AStarDirect(start, goal, actions, field):
+    def AStarDirect(start, goal, field, actions):
         vector = (start[0] - goal[0], start[1] - goal[1])
         cost = lambda node: node['pathCost'] + Search.manhattanDistance(goal, node['position']) \
                             + 0.0001*Search.crossDistance((node['position'][0] - goal[0], node['position'][1] - goal[1]), vector)
 
-        return Search.leastCost(Graph2D(start, goal, actions, field), cost)
+        return Search.leastCost(start, goal, Graph2D(start, field, actions), cost)
 
 
     # Função de busca que minimiza uma função custo genérica.
     @staticmethod
-    def leastCost(graph, cost):
+    def leastCost(start, goal, graph, cost):
         # Nó inicial.
         frontier = [ (0, 0, graph.startNode) ]
         i = 0
@@ -92,7 +92,7 @@ class Search:
                     continue
 
                 # Encontrou o menor caminho.
-                if node['isGoal']:
+                if node['position'] == goal:
                     return graph.makePath(node)
 
                 # Adiciona novos nós para serem explorados.
@@ -100,7 +100,7 @@ class Search:
                     i -= 1
                     heapq.heappush(frontier, (cost(edge), i, edge))
 
-        except:
+        except IndexError:
             return graph.makePath(None)
 
 
@@ -146,7 +146,7 @@ class Search:
     # Se não for possível seguir o caminho direto, ele retorna o caminho até o obstáculo
     # que interceptou o movimento.
     @staticmethod
-    def straightLine(start, goal, actions, field):
+    def straightLine(start, goal, field, actions):
         vector = (start[0] - goal[0], start[1] - goal[1])
         cost = lambda node: Search.crossDistance((node[0] - goal[0], node[1] - goal[1]), vector)
 

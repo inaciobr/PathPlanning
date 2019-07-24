@@ -51,7 +51,8 @@ class Graph2D:
 
 
     # Monta o caminho encontrado.
-    def makePath(self, node):
+    @staticmethod
+    def makePath(node):
         solution = [ ]
 
         while node is not None:

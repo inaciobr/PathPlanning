@@ -1,3 +1,4 @@
+from collections import deque, namedtuple
 import numpy as np
 import heapq
 
@@ -15,19 +16,43 @@ class Search:
     # Busca em largura.
     # Todos as expansões são consideradas com custo 1.
     @staticmethod
-    def breadthFirst(start, goal, field, actions):
-        graph = Graph2D(field, actions)
-        frontier = [ graph.addNode(start, 0, 'S') ]
+    def breadthFirst(start, goal, mask, actions):
+        nodes = {
+            start: {
+                'position': start,
+                'pathCost': 0,
+                'action': 'S',
+                'parent': None
+            }
+        }
 
-        while len(frontier):
-            node = frontier.pop(0)
-            for edge in graph.newEdges(node):
-                if edge['position'] == goal:
-                    return graph.makePath(edge)
+        frontier = deque([ nodes[start] ])
+        try:
+            while True:
+                node = frontier.popleft()
+                posX, posY = node['position']
 
-                frontier.append(edge)
+                for action in actions:
+                    dx, dy = action['direction']
+                    edge = (posX + dx, posY + dy)
 
-        return graph.makePath(None)
+                    try:
+                        if edge not in nodes and mask[edge] and 0 <= edge[0] and 0 <= edge[1]:
+                            nodes[edge] = {
+                                'position': edge,
+                                'pathCost': node['pathCost'] + action['cost'],
+                                'action': action['action'],
+                                'parent': node
+                            }
+                            
+                            if edge == goal:
+                                return Graph2D.makePath(nodes[edge])
+
+                            frontier.append(nodes[edge])
+                    except:
+                        pass
+        except:
+            return Graph2D.makePath(None)
 
 
     # Função de busca que minimiza uma função custo genérica.

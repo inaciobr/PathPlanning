@@ -23,7 +23,6 @@ class Field:
         self.region = ndimage.measurements.label(self.mask)[0]
 
         self.validPositions = self.mask.nonzero()
-        self.validPositionsAmount = self.validPositions[0].size
 
 
     # Gera um labirinto aleatório
@@ -57,18 +56,18 @@ class Field:
 
     # Retorna uma tupla com uma posição válida aleatória no mapa
     def randomPosition(self):
-        pos = random.randrange(0, self.validPositionsAmount)
+        pos = random.randrange(0, self.validPositions[0].size)
         return (self.validPositions[0][pos], self.validPositions[1][pos])
 
 
     # Exibe o campo
     def __str__(self):
         np.set_printoptions(formatter = {
-            'float': lambda x: '| ' + str('#' if x == np.inf else ' ')
+            'float': lambda x: "| " + str('#' if x == np.inf else ' ')
         })
 
         # Identificação das colunas
-        mapa = '     ' \
+        mapa = "     " \
              + ' '.join("{:03}".format(i) for i in range(self.field.shape[1])) \
              + '\n'
 

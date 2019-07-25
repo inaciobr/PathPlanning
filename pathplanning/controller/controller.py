@@ -26,8 +26,9 @@ class Controller:
         self.addDrone('A', (0, 0)).setGoal((999, 999))
         t = time.time()
         #AI.AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field, self.actions)
-        for _ in range(100000):
-            AI.checkStraightLine((0, 0), (100, 100), self.field.mask)
+        for _ in range(100):
+            AI.straightLine((0, 0), (199, 199), self.field, self.actions)
+            #AI.breadthFirst((0, 0), (199, 199), self.field.mask)
         print(time.time() - t)
 
         #self.field = Field.createMaze((1000, 1000), 0.2)

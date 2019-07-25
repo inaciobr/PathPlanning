@@ -54,7 +54,6 @@ def leastCost(start, goal, graph, cost):
         # Extrai o nó com menor custo.
         _, _, node = heapq.heappop(openList)
 
-        # A primeira vez que visita um nó é quando encontra o menor caminho até ele.
         if node['visited']:
             continue
 

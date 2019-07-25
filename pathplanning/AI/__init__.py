@@ -1,4 +1,4 @@
 from .searchInformed import *
 from .searchUninformed import *
 
-from .line import *
+from .straightLine import *

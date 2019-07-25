@@ -1,5 +1,5 @@
 from ..field import Field, Drone
-from ..AI import Search
+from .. import AI
 
 import cProfile
 import time
@@ -23,9 +23,11 @@ class Controller:
         #print(Search.straightLine(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.actions, self.field))
         #self.field = Field.load('tAcess.npy')
         self.field = Field.createMaze((200, 200), 0.0)
-        self.addDrone('A', (0, 0)).setGoal((199, 199))
+        self.addDrone('A', (0, 0)).setGoal((999, 999))
         t = time.time()
-        Search.breadthFirst(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field.mask, self.actions)
+        #AI.AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field, self.actions)
+        for _ in range(100000):
+            AI.checkStraightLine((0, 0), (100, 100), self.field.mask)
         print(time.time() - t)
 
         #self.field = Field.createMaze((1000, 1000), 0.2)

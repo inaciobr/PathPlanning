@@ -4,7 +4,7 @@ entre dois pontos com o uso de informações sobre o mapa.
 """
 import heapq
 
-from .graph2D import Graph2D
+from . import path
 from . import heuristic
 
 
@@ -86,4 +86,4 @@ def leastCost(start, goal, field, actions, cost):
                     pass
 
     except:
-        return Graph2D.makePath(None)
+        return path.makePath(None)

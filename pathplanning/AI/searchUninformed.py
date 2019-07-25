@@ -3,7 +3,8 @@ Algoritmos de busca para encontrar o caminho que minimiza um determiando custo
 entre dois pontos, sem conhecimento sobre detalhes do ambiente.
 """
 from collections import deque
-from .graph2D import Graph2D
+
+from . import path
 
 
 __all__ = ['breadthFirst']
@@ -41,10 +42,10 @@ def breadthFirst(start, goal, mask, actions):
                         }
                         
                         if edge == goal:
-                            return Graph2D.makePath(nodes[edge])
+                            return path.makePath(nodes[edge])
 
                         frontier.append(nodes[edge])
                 except:
                     pass
     except:
-        return Graph2D.makePath(None)
+        return path.makePath(None)

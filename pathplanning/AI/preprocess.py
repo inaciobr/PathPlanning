@@ -55,6 +55,7 @@ def floydWarshall(field):
 
     # Nós vizinhos:
 
+
     for i, j, k in np.ndindex((field.size, field.size, field.size)):
         if dist[i, j] > dist[i, k] + dist[k, j]:
             dist[i, j] = dist[i, k] + dist[k, j]
@@ -70,4 +71,24 @@ def waveVector(field):
 
 # Movimentos permitidos
 def allowedMoves(mask):
-    pass
+    moves = np.full(mask.shape, 0b1111, dtype = 'b')
+
+    # 4 Movimentos
+    M_UP    = 0b0001    # 0x1 -> Up
+    M_DOWN  = 0b0010    # 0x2 -> Down
+    M_LEFT  = 0b0100    # 0x4 -> Left
+    M_RIGHT = 0b1000    # 0x8 -> Right
+
+    # Bordas
+    moves[ 0,  :] &= ~M_UP
+    moves[-1,  :] &= ~M_DOWN
+    moves[ :,  0] &= ~M_LEFT
+    moves[ :, -1] &= ~M_RIGHT
+
+    # Arredores dos obstáculos
+
+
+    # Obstáculos
+    moves[~mask] = 0b0000
+
+    return moves

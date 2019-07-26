@@ -4,7 +4,8 @@ Algoritmos de pré-processamento do mapa.
 import numba as nb
 import numpy as np
 
-__all__ = ['connectedComponent', 'floydWarshall', 'waveVector']
+
+__all__ = ['connectedComponent', 'floydWarshall', 'waveVector', 'allowedMoves']
 
 
 # Connected Component Labeling
@@ -72,7 +73,8 @@ def waveVector(field):
 # Movimentos permitidos
 def allowedMoves(mask):
     moves = np.full(mask.shape, 0b1111, dtype = 'b')
-
+    notMask = ~mask
+    
     # 4 Movimentos
     M_UP    = 0b0001    # 0x1 -> Up
     M_DOWN  = 0b0010    # 0x2 -> Down
@@ -86,9 +88,12 @@ def allowedMoves(mask):
     moves[ :, -1] &= ~M_RIGHT
 
     # Arredores dos obstáculos
-
+    moves[1:][notMask[:-1]] &= ~M_UP
+    moves[:-1][notMask[1:]] &= ~M_DOWN
+    moves[:,1:][notMask[:,:-1]] &= ~M_LEFT
+    moves[:,:-1][notMask[:,1:]] &= ~M_RIGHT
 
     # Obstáculos
-    moves[~mask] = 0b0000
+    moves[notMask] = 0b0000
 
     return moves

@@ -5,7 +5,7 @@ entre dois pontos com o uso de informações sobre o mapa.
 import heapq
 
 from . import path
-from . import heuristic
+from . import cost
 
 
 __all__ = ['AStar', 'uniformCost', 'greedy', 'AStarDirect', 'leastCost']
@@ -15,36 +15,27 @@ __all__ = ['AStar', 'uniformCost', 'greedy', 'AStarDirect', 'leastCost']
 # Utiliza a distância de manhattan como heurística.
 # OBS: Baseada em 4 movimentos possíveis.
 def AStar(start, goal, field, actions):
-    cost = lambda node: node['pathCost'] + heuristic.manhattanDistance(goal, node['position'])
-    return leastCost(start, goal, field, actions, cost)
+    return leastCost(start, goal, field, actions, cost.AStar)
 
 
 # Busca uniforme
 # Não utiliza heurística.
 def uniformCost(start, goal, field, actions):
-    cost = lambda node: node['pathCost']
-    return leastCost(start, goal, field, actions, cost)
-    
+    return leastCost(start, goal, field, actions, cost.uniform)
+
 
 # Busca greedy
 # Utiliza a distância de manhattan como heurística.
 # OBS: Baseada em 4 movimentos possíveis.
 def greedy(start, goal, field, actions):
-    cost = lambda node: heuristic.manhattanDistance(goal, node['position'])
-    return leastCost(start, goal, field, actions, cost)
+    return leastCost(start, goal, field, actions, cost.greedy)
 
 
 # Busca A* "Direta"
 # Utiliza o produto vetorial como parte da heurística para favorecer
 # caminhos próximos à linha reta que conecta o início ao fim.
 def AStarDirect(start, goal, field, actions):
-    vector = (start[0] - goal[0], start[1] - goal[1])
-    cost = lambda node: (
-        node['pathCost'] + heuristic.manhattanDistance(goal, node['position'])
-        + 0.0001*heuristic.crossDistance((node['position'][0] - goal[0], node['position'][1] - goal[1]), vector)
-    )
-
-    return leastCost(start, goal, field, actions, cost)
+    return leastCost(start, goal, field, actions, cost.AStarDirect)
 
 
 # Função de busca que minimiza uma função custo genérica.
@@ -65,7 +56,7 @@ def leastCost(start, goal, field, actions, cost):
             closedList[node['position']] = node
 
             if node['position'] == goal:
-                return Graph2D.makePath(node)
+                return path.makePath(node)
 
             posX, posY = node['position']
             for action in actions:
@@ -81,9 +72,8 @@ def leastCost(start, goal, field, actions, cost):
                         }
 
                         i -= 1
-                        heapq.heappush(openList, (cost(edgeNode), i, edgeNode))
+                        heapq.heappush(openList, (cost(start, goal, edgeNode), i, edgeNode))
                 except:
                     pass
-
     except:
         return path.makePath(None)

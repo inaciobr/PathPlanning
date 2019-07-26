@@ -4,7 +4,7 @@ Algoritmos baseados em linhas retas
 import numba as nb
 import numpy as np
 
-from . import heuristic
+from . import cost
 
 
 __all__ = ['checkStraightLine', 'straightLine', 'countObstacles', 'straightLinePositions']
@@ -18,7 +18,7 @@ def straightLine(start, goal, field, actions):
     node = start
 
     vector = (goal[0] - start[0], goal[1] - start[1])
-    cost = lambda n: heuristic.crossDistance((n[0] - start[0], n[1] - start[1]), vector)
+    distance = lambda n: cost.crossDistance((n[0] - start[0], n[1] - start[1]), vector)
 
     # Utiliza apenas as ações que apontam na direção do objetivo.
     gActions = [
@@ -37,7 +37,7 @@ def straightLine(start, goal, field, actions):
             (node[0] + act['direction'][0], node[1] + act['direction'][1])
             for act in gActions
         ]
-        _, node, act = min(zip(map(cost, edgePos), edgePos, gActions))
+        _, node, act = min(zip(map(distance, edgePos), edgePos, gActions))
 
         if not mask[node]:
             break

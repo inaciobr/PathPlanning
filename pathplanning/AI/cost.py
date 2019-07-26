@@ -1,11 +1,38 @@
 """
-Heuristics
+Cost functions
 """
 import numba as nb
+import numba.typed as typed
 
 __all__ = ['manhattanDistance', 'chebyshevDistance', 'euclideanDistance', 'crossDistance']
 
 
+def AStar(start, goal, node):
+    return node['pathCost'] + manhattanDistance(goal, node['position'])
+
+
+def uniform(start, goal, node):
+    return node['pathCost']
+
+
+def greedy(start, goal, node):
+    return manhattanDistance(goal, node['position'])
+
+
+def AStarDirect(start, goal, node):
+    refX, refY = goal
+    startGoal = (start[0] - refX, start[1] - refY)
+    nodeGoal = (node['position'][0] - refX, node['position'][1] - refY)
+
+    return (
+        node['pathCost'] + manhattanDistance(goal, node['position'])
+        + 0.0001*crossDistance(nodeGoal, startGoal)
+    )
+
+
+"""
+Heuristics
+"""
 # Distância de Manhattan
 # Considera apenas 4 movimentos possíveis em uma grade.
 @nb.njit(nb.float64(nb.types.UniTuple(nb.int64, 2), nb.types.UniTuple(nb.int64, 2)))

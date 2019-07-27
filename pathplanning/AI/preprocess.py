@@ -7,7 +7,7 @@ import numpy as np
 from collections import deque
 
 
-__all__ = ['allowedMoves', 'waveVector', 'connectedComponent', 'floydWarshall']
+__all__ = ['allowedMoves', 'connectedComponent', 'floydWarshall']
 
 
 # Movimentos permitidos
@@ -36,39 +36,6 @@ def allowedMoves(mask):
     moves[~mask] = 0b0000
 
     return moves
-
-
-# Distância em 4 movimentos entre dois pontos
-@nb.njit(nb.int64[:, :, :](nb.types.UniTuple(nb.int64, 2), nb.boolean[:, :]))
-def waveVector(source, mask):
-  moves = [(0, 0, 0, 1), (0, 0, 1, 0), (0, 1, 0, 0), (1, 0, 0, 0)]
-  limX, limY = mask.shape
-
-  wave = np.full((*mask.shape, 4), -1, dtype=np.int64)
-  wave[source] = 0, 0, 0, 0
-
-  i = 0
-  frontier = [ source ]
-  
-  while i < len(frontier):
-      posX, posY = frontier[i]
-      i += 1
-
-      for u, d, l, r in moves:
-          edge = posX + u - d, posY + r - l
-
-          if wave[edge][0] == -1 and 0 <= edge[0] < limX and 0 <= edge[1] < limY and mask[edge]:
-              wave[edge][0] = wave[posX, posY][0] + u
-              wave[edge][1] = wave[posX, posY][1] + d
-              wave[edge][2] = wave[posX, posY][2] + l
-              wave[edge][3] = wave[posX, posY][3] + r
-              frontier.append(edge)
-
-  return wave.astype(np.uint64)
-
-
-
-
 
 
 # Connected Component Labeling

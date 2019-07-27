@@ -1,6 +1,7 @@
 """
 Cost functions
 """
+import numpy as np
 import numba as nb
 import numba.typed as typed
 

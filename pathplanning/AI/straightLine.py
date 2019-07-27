@@ -82,39 +82,6 @@ def checkStraightLine(start, goal, mask):
 
 
 # Verifica se existe a linha reta que liga dois pontos.
-@nb.njit(nb.int64(nb.types.UniTuple(nb.int64, 2), nb.types.UniTuple(nb.int64, 2), nb.boolean[:, :]))
-def countObstacles(start, goal, mask):
-    px, py = start
-
-    vecX = goal[0] - px
-    vecY = goal[1] - py
-
-    dirX = 1 if vecX > 0 else -1
-    dirY = 1 if vecY > 0 else -1
-
-    stepX = dirX * vecX
-    stepY = dirY * vecY
-
-    i = 0.5*stepY
-    j = 0.5*stepX
-
-    cross = stepY * (stepX + 0.5) + stepX * (stepY + 0.5)
-    count = not mask[px, py]
-
-    while i + j < cross:
-        if i < j:
-            px += dirX
-            i += stepY
-        else:
-            py += dirY
-            j += stepX
-
-        count += not mask[px, py]
-
-    return count
-
-
-# Verifica se existe a linha reta que liga dois pontos.
 @nb.njit(nb.types.UniTuple(nb.int64[:], 2)(nb.types.UniTuple(nb.int64, 2),
                                            nb.types.UniTuple(nb.int64, 2),
                                            nb.boolean[:, :]))

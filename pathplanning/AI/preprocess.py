@@ -99,10 +99,11 @@ def connectedComponentLabeling(mask):
 
     return labels
 
-    
+
 # Algoritmo de Floyd-Warshall
-def floydWarshall(field):
-    dist = np.empty((*field.shape, *field.shape), dtype = np.float64)
+@nb.njit(nb.float32[:, :, :, :](nb.boolean[:, :]), parallel = True)
+def floydWarshall(mask):
+    dist = np.empty((*mask.shape, *mask.shape), dtype = np.float32)
 
     for i in nb.prange(dist.shape[0]):
         for j in nb.prange(dist.shape[1]):
@@ -110,14 +111,14 @@ def floydWarshall(field):
                 for v in nb.prange(dist.shape[3]):
                     dist[i, j, u, v] = \
                         0.0 if i == u and j == v else \
-                        1.0 if (i - u == 1 or i - u == -1) and (j == v) or \
+                        mask[i, j]| mask[u, v] \
+                            if (i - u == 1 or i - u == -1) and (j == v) or \
                                (j - v == 1 or j - v == -1) and (i == u) else \
                         np.inf
-
-    # Iteração
-    for i, j, k in np.ndindex((field.size, field.size, field.size)):
-        if dist[i, j] > dist[i, k] + dist[k, j]:
-            dist[i, j] = dist[i, k] + dist[k, j]
+    
+    dist = dist.reshape((mask.size, mask.size))
+    for i, j in np.ndindex(dist.shape):
+        dist[i, j] = np.min(dist[i, :] + dist[:, j])
 
     # Reshape para 4-dim
-    return dist
+    return dist.reshape((*mask.shape, *mask.shape))

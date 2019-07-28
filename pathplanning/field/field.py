@@ -28,8 +28,8 @@ class Field:
     # Gera um labirinto aleatório
     @classmethod
     def createMaze(cls, shape, fillPercentage):
-        mask = np.random.rand(*np.clip(shape, 1, None)) <= fillPercentage
-        return cls(np.where(mask, np.inf, 0.0))
+        mask = np.random.rand(*np.clip(shape, 1, None)) > fillPercentage
+        return cls(np.where(mask, 0.0, np.inf))
 
 
     """

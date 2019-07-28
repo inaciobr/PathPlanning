@@ -7,7 +7,7 @@ import numpy as np
 from collections import deque
 
 
-__all__ = ['allowedMoves', 'connectedComponent', 'floydWarshall']
+__all__ = ['allowedMoves', 'connectedComponentLabeling', 'floydWarshall']
 
 
 # Movimentos permitidos
@@ -40,39 +40,62 @@ def allowedMoves(mask):
 
 # Connected Component Labeling
 # Obstáculos têm valor 0.
-#@nb.njit(nb.int64[:,:](nb.boolean[:, :]))
-def connectedComponent(mask):
-    linked = [ set(0) ]
+@nb.njit(nb.int64[:,:](nb.boolean[:, :]))
+def connectedComponentLabeling(mask):
+    linked = [ 0 ]
     labels = np.zeros(mask.shape, dtype = np.int64)
     nextLabel = 1
 
     # First pass
     for i, j in np.ndindex(mask.shape):
         if not mask[i, j]:
-            pass
+            continue
 
         n1 = labels[i - 1, j] if i > 0 else 0
         n2 = labels[i, j - 1] if j > 0 else 0
 
+        # Has neighbors
         if n1 or n2:
             labels[i, j] = n1 if n1 > n2 else n2
 
-            if n1 and n2:
-                linked[n1].add(n2)
-                linked[n2].add(n1)
+            # Union
+            if n1 and n2 and n1 != n2:
+                a, b = n1, n2
 
+                while linked[a] != a:
+                    a = linked[a]
+                while linked[b] != b:
+                    b = linked[b]
+
+                minLabel = a if a < b else b
+                linked[b] = linked[a] = minLabel
+
+                # Merge
+                a, b = n1, n2
+                while a != minLabel:
+                    a, linked[a] = linked[a], minLabel
+                while b != minLabel:
+                    b, linked[b] = linked[b], minLabel
+
+        # Doesn't have neighbors
         else:
-            linked.append(set(nextLabel))
             labels[i, j] = nextLabel
+            linked.append(nextLabel)
             nextLabel += 1
 
-
+    # Normalization of the labels
+    norm = 0
+    for i, link in enumerate(linked):
+        if i == link:
+            linked[i] = norm
+            norm += 1
+        else:
+            linked[i] = linked[link]
+            
     # Second pass
     for i, j in np.ndindex(mask.shape):
         if mask[i, j]:
-            for label, s in linked:
-                if labels[i, j] in s:
-                    labels[i, j] = label
+            labels[i, j] = linked[labels[i, j]]
 
     return labels
 

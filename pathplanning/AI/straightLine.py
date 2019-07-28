@@ -7,7 +7,7 @@ import numpy as np
 from . import cost
 
 
-__all__ = ['checkStraightLine', 'straightLine', 'countObstacles', 'straightLinePositions']
+__all__ = ['checkStraightLine', 'straightLine', 'straightLinePositions']
 
 
 # Algoritmo que visa puramente seguir uma linha reta.

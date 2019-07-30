@@ -47,7 +47,7 @@ def connectedComponentLabeling(mask):
     nextLabel = 1
 
     # First pass
-    for i, j in np.ndindex(mask.shape):
+    for i, j in np.ndindex(labels.shape):
         if not mask[i, j]:
             continue
 
@@ -60,22 +60,13 @@ def connectedComponentLabeling(mask):
 
             # Union
             if n1 and n2 and n1 != n2:
-                a, b = n1, n2
+                a = linked[linked[n1]]
+                b = linked[linked[n2]]
 
-                while linked[a] != a:
-                    a = linked[a]
-                while linked[b] != b:
-                    b = linked[b]
-
-                minLabel = a if a < b else b
-                linked[b] = linked[a] = minLabel
-
-                # Merge
-                a, b = n1, n2
-                while a != minLabel:
-                    a, linked[a] = linked[a], minLabel
-                while b != minLabel:
-                    b, linked[b] = linked[b], minLabel
+                if a < b:
+                    linked[b] = linked[n1] = a
+                else:
+                    linked[a] = linked[n2] = b
 
         # Doesn't have neighbors
         else:

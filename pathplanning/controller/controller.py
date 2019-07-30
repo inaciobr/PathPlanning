@@ -1,7 +1,6 @@
 from ..field import Field, Drone
 from .. import AI
 
-from scipy import ndimage
 import numpy as np
 
 import cProfile
@@ -17,14 +16,15 @@ class Controller:
     def createMaze(self, shape, fillPercentage):
         #print(Search.straightLine(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.actions, self.field))
         #self.field = Field.load('tAcess.npy')
-        self.field = Field.createMaze((2000, 2000), 0.2)
-        self.addDrone('A', (0, 0)).setGoal((999, 999))
+        self.field = Field.createMaze((202, 202), 0.1)
+        self.addDrone('A', (0, 0)).setGoal((200, 200))
         t = time.time()
         #AI.AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field, self.actions)
-        for _ in range(100):
-            #AI.AStar((0, 0), (999, 999), self.field, AI.getFourMoves()))
+        for _ in range(1):
+            self.vehicles['A'].path = AI.AStarDirect((0, 0), (200, 200), self.field, AI.getFourMoves())
+            #AI.depthFirst((0, 0), (199, 199), self.field.mask, AI.getFourMoves())
+
             #AI.straightLinePositions((0, 0), (999, 999), self.field.mask)
-            #ndimage.measurements.label(self.field.mask)
             AI.connectedComponentLabeling(self.field.mask)
             #self.field = Field.createMaze((200, 200), 0.2)
             #if np.any(AI.connectedComponentLabeling(self.field.mask) != ndimage.measurements.label(self.field.mask)[0]):

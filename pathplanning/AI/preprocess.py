@@ -101,14 +101,14 @@ def floydWarshall(mask):
                 for v in nb.prange(dist.shape[3]):
                     dist[i, j, u, v] = \
                         0.0 if i == u and j == v else \
-                        mask[i, j]| mask[u, v] \
+                        mask[i, j] | mask[u, v] \
                             if (i - u == 1 or i - u == -1) and (j == v) or \
                                (j - v == 1 or j - v == -1) and (i == u) else \
                         np.inf
     
     dist = dist.reshape((mask.size, mask.size))
     for i, j in np.ndindex(dist.shape):
-        dist[i, j] = np.min(dist[i, :] + dist[:, j])
+        dist[i, j] = min(dist[i, :] + dist[:, j])
 
     # Reshape para 4-dim
     return dist.reshape((*mask.shape, *mask.shape))

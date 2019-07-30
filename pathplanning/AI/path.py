@@ -35,7 +35,7 @@ def makePath(node):
         solution.append({
             'position': node['position'],
             'pathCost': node['pathCost'],
-            'action': _actions[node['action']]
+            'action': _actions[node['action']]['action']
         })
 
         node = node['parent']

@@ -43,7 +43,12 @@ def leastCost(start, goal, field, actions, cost):
     mask = field.mask
 
     closedList = { }
-    openList = [ (0, 0, { 'position': start, 'pathCost': 0, 'action': 'S', 'parent': None }) ]
+    openList = [ (0, 0, {
+        'position': start,
+        'pathCost': 0,
+        'action': 0x00,
+        'parent': None
+    }) ]
 
     i = 0
     try:

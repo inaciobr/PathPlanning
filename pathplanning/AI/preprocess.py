@@ -4,10 +4,8 @@ Algoritmos de pré-processamento do mapa.
 import numba as nb
 import numpy as np
 
-from collections import deque
 
-
-__all__ = ['allowedMoves', 'connectedComponentLabeling', 'floydWarshall']
+__all__ = ['allowedMoves', 'connectedComponentLabeling']
 
 
 # Movimentos permitidos
@@ -91,6 +89,7 @@ def connectedComponentLabeling(mask):
     return labels
 
 
+"""
 # Algoritmo de Floyd-Warshall
 @nb.njit(nb.float32[:, :, :, :](nb.boolean[:, :]), parallel = True)
 def floydWarshall(mask):
@@ -113,3 +112,4 @@ def floydWarshall(mask):
 
     # Reshape para 4-dim
     return dist.reshape((*mask.shape, *mask.shape))
+"""

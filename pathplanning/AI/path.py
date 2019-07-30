@@ -1,7 +1,7 @@
 import numpy as np
 
 
-__all__ = ['getFourMoves', 'makePath']
+__all__ = ['getFourMoves', 'makePath', 'printGraphStates']
 
 
 _actions = {
@@ -42,3 +42,23 @@ def makePath(node):
 
     solution.reverse()
     return solution
+
+
+def printGraphStates(nodes, field):
+    # Identificação das colunas
+    mapa = '     ' \
+         + ' '.join("{:03}".format(i) for i in range(field.shape[1])) \
+         + '\n'
+
+    for i, line in enumerate(field):
+        mapa += "{:03} ".format(i)
+
+        for j, _ in enumerate(line):
+            mapa += "| " + (
+                'V' if (i, j) in nodes else
+                ' '
+            ) + " "
+
+        mapa += '\n'
+
+    print(mapa)

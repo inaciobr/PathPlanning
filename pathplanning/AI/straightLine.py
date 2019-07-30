@@ -29,7 +29,7 @@ def straightLine(start, goal, field, actions):
     path = [{
         'position': node,
         'pathCost': 0,
-        'action': 'S'
+        'action': 0x00
     }]
 
     while node != goal:

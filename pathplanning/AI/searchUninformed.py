@@ -2,12 +2,13 @@
 Algoritmos de busca para encontrar o caminho que minimiza um determiando custo
 entre dois pontos, sem conhecimento sobre detalhes do ambiente.
 """
+import numpy as np
 from collections import deque
 
 from . import path
 
 
-__all__ = ['breadthFirst']
+__all__ = ['breadthFirst', 'depthFirst']
 
 
 # Busca em largura.
@@ -16,8 +17,8 @@ def breadthFirst(start, goal, mask, actions):
     nodes = {
         start: {
             'position': start,
-            'pathCost': 0,
-            'action': 'S',
+            'pathCost': 0.0,
+            'action': 0x00,
             'parent': None
         }
     }
@@ -45,6 +46,53 @@ def breadthFirst(start, goal, mask, actions):
                             return path.makePath(nodes[edge])
 
                         frontier.append(nodes[edge])
+                except:
+                    pass
+    except:
+        return path.makePath(None)
+
+
+# Busca em profundidade.
+# Todos as expansões são consideradas com custo 1.
+# Solução não é, necessariamente, a solução ótima.
+def depthFirst(start, goal, mask, actions, limit = np.inf):
+    node = {
+        'position': start,
+        'pathCost': 0.0,
+        'action': 0x00,
+        'parent': None
+    }
+
+    nodes = { }
+    frontier = deque([ node ])
+    try:
+        while limit:
+            node = frontier.pop()
+            limit -= 1
+
+            if node['position'] in nodes:
+                continue
+
+            posX, posY = node['position']
+            nodes[node['position']] = node
+            
+            for action in actions:
+                dx, dy = action['direction']
+                edge = (posX + dx, posY + dy)
+
+                try:
+                    if edge not in nodes and mask[edge] and 0 <= edge[0] and 0 <= edge[1]:
+                        neighbor = {
+                            'position': edge,
+                            'pathCost': node['pathCost'] + action['cost'],
+                            'action': action['action'],
+                            'parent': node
+                        }
+
+                        if edge == goal:
+                            return path.makePath(neighbor)
+
+                        frontier.append(neighbor)
                 except:
                     pass
     except:

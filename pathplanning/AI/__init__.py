@@ -1,7 +1,9 @@
+from .preprocess import *
+from .path import *
+
 from .searchInformed import *
 from .searchUninformed import *
 
-from .straightLine import *
+from .straight import *
 
-from .preprocess import *
-from .path import *
+from .searchGenetic import *

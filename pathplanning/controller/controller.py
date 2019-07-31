@@ -16,12 +16,14 @@ class Controller:
     def createMaze(self, shape, fillPercentage):
         #print(Search.straightLine(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.actions, self.field))
         #self.field = Field.load('tAcess.npy')
-        self.field = Field.createMaze((202, 202), 0.1)
-        self.addDrone('A', (0, 0)).setGoal((200, 200))
+        test = np.array([[0, 0, 0, 0, 0], [0, np.inf, np.inf, np.inf, np.inf], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
+        self.field = Field(test)
+        self.addDrone('A', (0, 0)).setGoal((4, 4))
         t = time.time()
         #AI.AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field, self.actions)
         for _ in range(1):
-            self.vehicles['A'].path = AI.AStarDirect((0, 0), (200, 200), self.field, AI.getFourMoves())
+            #self.vehicles['A'].path = AI.uniformCost((1, 1), (200, 200), self.field, AI.getFourMoves())
+            self.vehicles['A'].path = AI.depthFirst((0, 0), (4, 4), self.field, AI.getFourMoves(), 10)
             #AI.depthFirst((0, 0), (199, 199), self.field.mask, AI.getFourMoves())
 
             #AI.straightLinePositions((0, 0), (999, 999), self.field.mask)

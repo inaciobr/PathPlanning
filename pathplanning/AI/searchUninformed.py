@@ -13,7 +13,8 @@ __all__ = ['breadthFirst', 'depthFirst']
 
 # Busca em largura.
 # Todos as expansões são consideradas com custo 1.
-def breadthFirst(start, goal, mask, actions):
+def breadthFirst(start, goal, field, actions):
+    mask = field.mask
     nodes = {
         start: {
             'position': start,
@@ -55,7 +56,8 @@ def breadthFirst(start, goal, mask, actions):
 # Busca em profundidade.
 # Todos as expansões são consideradas com custo 1.
 # Solução não é, necessariamente, a solução ótima.
-def depthFirst(start, goal, mask, actions, limit = np.inf):
+def depthFirst(start, goal, field, actions, limit = np.inf):
+    mask = field.mask
     node = {
         'position': start,
         'pathCost': 0.0,
@@ -66,16 +68,21 @@ def depthFirst(start, goal, mask, actions, limit = np.inf):
     nodes = { }
     frontier = deque([ node ])
     try:
-        while limit:
-            node = frontier.pop()
-            limit -= 1
+        while True:
+            path.printGraphStates(nodes, field.mask)
+            node = frontier[-1]
 
             if node['position'] in nodes:
+                frontier.pop()
+                nodes.pop(node['position'])
                 continue
+            
+            nodes[node['position']] = node
+
+            if node['position'] == goal:
+                return path.makePath(node)
 
             posX, posY = node['position']
-            nodes[node['position']] = node
-            
             for action in actions:
                 dx, dy = action['direction']
                 edge = (posX + dx, posY + dy)
@@ -88,9 +95,6 @@ def depthFirst(start, goal, mask, actions, limit = np.inf):
                             'action': action['action'],
                             'parent': node
                         }
-
-                        if edge == goal:
-                            return path.makePath(neighbor)
 
                         frontier.append(neighbor)
                 except:

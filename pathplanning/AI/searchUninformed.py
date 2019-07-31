@@ -8,7 +8,7 @@ from collections import deque
 from . import path
 
 
-__all__ = ['breadthFirst', 'depthFirst']
+__all__ = ['breadthFirst', 'depthFirst', 'iterativeDeepening']
 
 
 # Busca em largura.
@@ -69,12 +69,11 @@ def depthFirst(start, goal, field, actions, limit = np.inf):
     frontier = deque([ node ])
     try:
         while True:
-            path.printGraphStates(nodes, field.mask)
             node = frontier[-1]
 
-            if node['position'] in nodes:
+            if node['position'] in nodes or limit < node['pathCost']:
+                nodes.pop(node['position'], None)
                 frontier.pop()
-                nodes.pop(node['position'])
                 continue
             
             nodes[node['position']] = node
@@ -101,3 +100,15 @@ def depthFirst(start, goal, field, actions, limit = np.inf):
                     pass
     except:
         return path.makePath(None)
+
+
+def iterativeDeepening(start, goal, field, actions, depth = 0, max = np.inf):
+    while depth < max:
+        solution = depthFirst(start, goal, field, actions, limit = depth)
+
+        if len(solution):
+            return solution
+
+        depth += 1
+    
+    return path.makePath(None)

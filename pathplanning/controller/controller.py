@@ -23,7 +23,7 @@ class Controller:
         #AI.AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field, self.actions)
         for _ in range(1):
             #self.vehicles['A'].path = AI.uniformCost((1, 1), (200, 200), self.field, AI.getFourMoves())
-            self.vehicles['A'].path = AI.depthFirst((0, 0), (4, 4), self.field, AI.getFourMoves(), 10)
+            self.vehicles['A'].path = AI.iterativeDeepening((0, 0), (4, 4), self.field, AI.getFourMoves())
             #AI.depthFirst((0, 0), (199, 199), self.field.mask, AI.getFourMoves())
 
             #AI.straightLinePositions((0, 0), (999, 999), self.field.mask)

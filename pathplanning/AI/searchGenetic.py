@@ -73,9 +73,10 @@ def iterativeGeneticSearch(start, goal, field, actions):
         #geneMutationRate = 0.01,
     )
 
-    GA.run()
+    points = GA.run()
 
-    return path.makePath(None)
+    return path.connectPoints(start, goal, field, actions,
+            (validPositions[0][points], validPositions[1][points]))
 
 
 # Obtém lista de posições válidas

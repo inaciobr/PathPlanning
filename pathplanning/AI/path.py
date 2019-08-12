@@ -1,7 +1,9 @@
+from . import searchInformed
+
 import numpy as np
 
 
-__all__ = ['getFourMoves', 'makePath', 'printGraphStates']
+__all__ = ['getFourMoves', 'makePath', 'printGraphStates', 'connectPoints']
 
 
 _actions = {
@@ -42,6 +44,20 @@ def makePath(node):
 
     solution.reverse()
     return solution
+
+
+# Retorna um caminho composto pela união de diversos pontos
+def connectPoints(start, goal, field, actions, points):
+    path = [ ]
+
+    points = list(zip(*points))
+    points.insert(0, start)
+    points.append(goal)
+
+    for i in range(len(points) - 1):
+        path.extend(searchInformed.AStarDirect(points[i], points[i + 1], field, actions))
+
+    return path
 
 
 def printGraphStates(nodes, field):

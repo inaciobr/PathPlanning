@@ -23,8 +23,8 @@ class Controller:
         t = time.time()
         #AI.AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field, self.actions)
         for _ in range(1):
-            self.vehicles['A'].path = AI.AStar((0, 0), (999, 999), self.field, AI.getFourMoves())
-            #self.vehicles['A'].path = AI.iterativeGeneticSearch((0, 0), (999, 999), self.field, AI.getFourMoves())
+            #self.vehicles['A'].path = AI.AStar((0, 0), (999, 999), self.field, AI.getFourMoves())
+            self.vehicles['A'].path = AI.iterativeGeneticSearch((0, 0), (999, 999), self.field, AI.getFourMoves())
             #AI.depthFirst((0, 0), (199, 199), self.field.mask, AI.getFourMoves())
 
             #AI.straightLinePositions((0, 0), (999, 999), self.field.mask)

@@ -83,9 +83,8 @@ def checkStraightLine(start, goal, mask):
 
 # Verifica se existe a linha reta que liga dois pontos.
 @nb.njit(nb.types.UniTuple(nb.int64[:], 2)(nb.types.UniTuple(nb.int64, 2),
-                                           nb.types.UniTuple(nb.int64, 2),
-                                           nb.boolean[:, :]))
-def straightLinePositions(start, goal, mask):
+                                           nb.types.UniTuple(nb.int64, 2)))
+def straightLinePositions(start, goal):
     px, py = start
 
     vecX = goal[0] - px

@@ -102,6 +102,8 @@ def depthFirst(start, goal, field, actions, limit = np.inf):
         return path.makePath(None)
 
 
+# Busca em profundidade iterativa.
+# Executa a busca em profundidade com limite iterativo.
 def iterativeDeepening(start, goal, field, actions, depth = 0, max = np.inf):
     while depth < max:
         solution = depthFirst(start, goal, field, actions, limit = depth)

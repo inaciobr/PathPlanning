@@ -6,14 +6,15 @@ import random
 Genetic Algorithm used to minimize positive functions.
 """
 class GeneticAlgorithm:
-    def __init__(self, fitnessFunction, geneSize, lowerBound, upperBound,
-                 maxIteractions, populationSize, eliteSize,
+    def __init__(self, fitnessFunction, arg, lowerBound, upperBound,
+                 populationSize, geneSize, maxIteractions, eliteSize,
                  threshold = np.NINF, selectionMethod = None, mutationMethod = None, crossoverMethod = None,
                  chromosomeMutationRate = 0.2, geneMutationRate = 0.01, tournamentSize = 5):
 
         # Function to be optimized.
         self.geneSize = geneSize
         self.fitnessFunction = fitnessFunction
+        self.arg = arg
         self.lowerBound = lowerBound
         self.upperBound = upperBound
 
@@ -99,7 +100,7 @@ class GeneticAlgorithm:
     def chromosomeMutation(self, population):
         elements = (np.random.rand(population.shape[0]) < self.chromosomeMutationRate).nonzero()[0]
         positions = np.random.randint(0, population.shape[1], elements.size)
-        population[elements, positions] = np.random.randint(self.lowerBound[positions], self.upperBound[positions], positions.size)
+        population[elements, positions] = np.random.randint(self.lowerBound, self.upperBound, positions.size)
         return population
 
 
@@ -108,7 +109,7 @@ class GeneticAlgorithm:
     def geneMutation(self, population):
         mask = np.random.rand(*population.shape) < self.geneMutationRate
         positions = mask.ravel().nonzero()[0] % population.shape[1]
-        population[mask] = np.random.randint(self.lowerBound[positions], self.upperBound[positions], positions.size)
+        population[mask] = np.random.randint(self.lowerBound, self.upperBound, positions.size)
         return population
 
 
@@ -123,7 +124,7 @@ class GeneticAlgorithm:
 
     def firstPopulation(self):
         self.population = np.random.randint(self.lowerBound, self.upperBound, (self.populationSize, self.geneSize))
-        self.fitValues = self.fitnessFunction(self.population.T)
+        self.fitValues = self.fitnessFunction(self.population.T, self.arg)
         self.sortPopulation()
 
 
@@ -141,7 +142,7 @@ class GeneticAlgorithm:
             # Next generations
             offspring = self.mutation(self, self.crossover(self, self.selectCouples(self)))
             self.population[self.eliteSize:] = offspring
-            self.fitValues[self.eliteSize:] = self.fitnessFunction(offspring.T)
+            self.fitValues[self.eliteSize:] = self.fitnessFunction(offspring.T, self.arg)
             self.sortPopulation()
 
         # Returns the chromosome with best fit on the population, since it's ordered.

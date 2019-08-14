@@ -46,7 +46,7 @@ def fit(idx, positions, mask):
     return fitness
 
 
-def iterativeGeneticSearch(start, goal, field, actions, limit = 50):
+def iterativeGeneticSearch(start, goal, field, actions, limit = 20):
     # Tentativa 0 (Linha reta)
     if straight.checkStraightLine(start, goal, field.mask):
         return straight.straightLine(start, goal, field, actions)

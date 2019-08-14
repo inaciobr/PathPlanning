@@ -7,7 +7,7 @@ import numpy as np
 from . import cost
 
 
-__all__ = ['checkStraightLine', 'straightLine', 'straightLinePositions']
+__all__ = ['checkStraightLine', 'straightLine', 'straightLinePositions', 'straightLineWeight']
 
 
 # Algoritmo que visa puramente seguir uma linha reta.
@@ -115,3 +115,38 @@ def straightLinePositions(start, goal):
         y.append(py)
 
     return (np.array(x), np.array(y))
+
+
+# Verifica se existe a linha reta que liga dois pontos.
+@nb.njit(nb.int64(nb.types.UniTuple(nb.int64, 2),
+                  nb.types.UniTuple(nb.int64, 2),
+                  nb.int64[:, :]))
+def straightLineWeight(start, goal, weights):
+    px, py = start
+
+    vecX = goal[0] - px
+    vecY = goal[1] - py
+
+    dirX = 1 if vecX > 0 else -1
+    dirY = 1 if vecY > 0 else -1
+
+    stepX = dirX * vecX
+    stepY = dirY * vecY
+
+    i = 0.5*stepY
+    j = 0.5*stepX
+
+    cross = stepY * (stepX + 0.5) + stepX * (stepY + 0.5)
+    weight = 0
+
+    while i + j < cross:
+        if i < j:
+            px += dirX
+            i += stepY
+        else:
+            py += dirY
+            j += stepX
+
+        weight += weights[px, py]
+
+    return weight

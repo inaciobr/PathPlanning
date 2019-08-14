@@ -13,18 +13,42 @@ class Controller:
         self.vehicles = { }
 
     
+    def testMap(self):
+        test = np.array([
+            [0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0, np.inf, np.inf, np.inf],
+            [0.0,    0.0,    0.0,    0.0, np.inf,    0.0,    0.0, np.inf, np.inf, np.inf],
+            [0.0,    0.0,    0.0,    0.0, np.inf,    0.0,    0.0,    0.0, np.inf, np.inf],
+            [0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0, np.inf],
+            [0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0],
+            [0.0, np.inf,    np.inf, 0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0],
+            [0.0, np.inf,    np.inf, 0.0,    0.0,    0.0,    0.0, np.inf, np.inf, np.inf],
+            [0.0, np.inf,    np.inf, 0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0],
+            [0.0, np.inf,    np.inf, 0.0, np.inf, np.inf,    0.0,    0.0,    0.0,    0.0],
+            [0.0, np.inf,    np.inf, 0.0, np.inf, np.inf,    0.0,    0.0,    0.0,    0.0],
+        ])
+
+        test = np.kron(test, [[1] * 10] * 10)
+        return test
+
+
+    def randomMap(self):
+        test = np.inf*(np.random.rand(10, 10) < 0.2)
+        test = np.kron(test, [[1] * 10] * 10)
+        return test
+
+    
     def createMaze(self, shape, fillPercentage):
         #print(Search.straightLine(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.actions, self.field))
-        #self.field = Field.load('tAcess.npy')
-        #test = np.array([[0, 0, 0, 0, 0], [0, 0, np.inf, np.inf, np.inf], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
+        self.field = Field.load('tAcess.npy')
+        #test = self.randomMap()
         #self.field = Field(test)
-        self.field = Field.createMaze((100, 100), 0.05)
-        self.addDrone('A', (50, 50)).setGoal((99, 99))
+        #self.field = Field.createMaze((100, 100), 0.1)
+        self.addDrone('A', (0, 0)).setGoal((99, 99))
         t = time.time()
         #AI.AStar(self.vehicles['A'].position, self.vehicles['A'].goalPosition, self.field, self.actions)
         for _ in range(1):
             #self.vehicles['A'].path = AI.AStar((0, 0), (999, 999), self.field, AI.getFourMoves())
-            self.vehicles['A'].path = AI.iterativeGeneticSearch((50, 50), (99, 99), self.field, AI.getFourMoves())
+            self.vehicles['A'].path = AI.iterativeGeneticSearch((0, 0), (99, 99), self.field, AI.getFourMoves())
             #AI.depthFirst((0, 0), (199, 199), self.field.mask, AI.getFourMoves())
 
             #AI.straightLinePositions((0, 0), (999, 999), self.field.mask)
